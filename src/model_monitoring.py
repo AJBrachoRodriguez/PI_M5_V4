@@ -12,6 +12,8 @@ import plotly.express as px
 from sklearn.model_selection import train_test_split
 # importamos el método para cargar los datos
 from cargar_datos import cargarDatos
+# acá importamos metplotlib
+import matplotlib.pyplot as plt
 
 ##########################################
 # 1. Configuración
@@ -20,7 +22,6 @@ from cargar_datos import cargarDatos
 API_URL = "http://localhost:8000/predict"
 DATASET_PATH = "./Base_de_datos.xlsx"      # dataset "original" (este es el que vamos a monitonear)
 MONIOR_LOG = "./Base_datos.csv"            # dataset "transformado"
-
 
 ##########################################
 # 2. Cargar el dataset y dividir los datos
@@ -62,6 +63,38 @@ print(y_new)
 # aplicación de Streamlit
 ####################################
 st.title("📊 Aplicación para el monitoreo de datos")
+
+####################################
+# 4. Crear un bar plot para chequear
+# el balance de clases
+####################################
+
+# cargar los datos
+df = cargarDatos()
+
+# mostrar los datos
+st.subheader("Datos")
+st.write(df.head())
+
+# contamos las clases
+class_counts = df["Pago_atiempo"].value_counts()
+
+st.subheader("Frecuencia por clase")
+st.write(class_counts)
+
+# ahora, construimos el gráfico tipo "histograma" (conteo)
+
+fig, ax = plt.subplots()
+
+class_counts.plot(kind="bar", ax=ax)
+
+#plt.figsize(10,6)
+
+ax.set_title("Distribución de clases")
+ax.set_xlabel("Pago_atiempo")
+ax.set_ylabel("Cantidad")
+
+st.pyplot(fig)
 
 
 
